@@ -1,0 +1,252 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: #111;
+  color: #eee;
+  display: flex;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+body.modalOpen { overflow: hidden; }
+
+#app { width: 100%; max-width: 520px; padding: 16px; padding-bottom: 32px; }
+
+/* Bố cục mặc định (mobile): 1 cột — game trước, mua hàng sau, BXH cuối. */
+.layout { display: flex; flex-direction: column; }
+.layout .center { order: 1; min-width: 0; }
+.layout .sideRight { order: 2; min-width: 0; }
+.layout .sideLeft { order: 3; min-width: 0; }
+
+/* Desktop rộng: 3 cột — trái BXH, giữa game, phải mua hàng. */
+@media (min-width: 1100px) {
+  #app { max-width: 1280px; }
+  .layout {
+    display: grid;
+    grid-template-columns: 290px minmax(0, 1fr) 350px;
+    gap: 20px;
+    align-items: start;
+  }
+  .layout .center { order: 2; }
+  .layout .sideRight { order: 3; }
+  .layout .sideLeft { order: 1; }
+  .layout .side {
+    position: sticky;
+    top: 16px;
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+}
+
+header { text-align: center; position: relative; }
+header h1 { margin: 0; font-size: 24px; line-height: 1.25; padding: 0 48px; }
+#muteBtn {
+  position: absolute; top: 0; right: 0;
+  width: 44px; height: 44px; font-size: 20px; line-height: 1;
+  border: 1px solid #444; border-radius: 10px; background: #222; color: #eee;
+  cursor: pointer; touch-action: manipulation;
+}
+#muteBtn.off { opacity: .55; }
+#userBar {
+  display: flex; justify-content: center; align-items: center; gap: 8px;
+  margin-top: 8px; font-size: 13px; color: #9ca3af; flex-wrap: wrap;
+}
+#userBar[hidden] { display: none; }
+#userEmail { max-width: 230px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#logoutBtn {
+  min-height: 34px; padding: 0 12px; font-size: 12px; border-radius: 8px;
+  border: 1px solid #444; background: #222; color: #eee; cursor: pointer;
+  touch-action: manipulation;
+}
+.money { font-size: 28px; font-weight: 700; margin: 8px 0; }
+.income { opacity: .7; }
+
+#scene {
+  display: block; width: 100%; height: auto;
+  border-radius: 12px; border: 1px solid #333; background: #f5e6c8;
+}
+
+.secTitle { font-size: 15px; margin: 18px 0 8px; opacity: .75; font-weight: 600; }
+
+#shops { display: flex; flex-direction: column; gap: 10px; }
+.shop { background: #1e1e1e; border: 1px solid #333; border-radius: 10px; padding: 12px; }
+.shop h3 {
+  margin: 0 0 8px; font-size: 16px;
+  display: flex; justify-content: space-between; align-items: center; gap: 8px;
+}
+.shop .cnt {
+  flex: none; font-size: 13px; font-weight: 700; color: #93c5fd;
+  background: #172554; padding: 2px 9px; border-radius: 999px;
+}
+.shop .row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.shop .sub { font-size: 12px; line-height: 1.35; color: #9ca3af; }
+.shop .actions { display: flex; gap: 8px; flex: none; }
+/* Cột phải hẹp: xếp nút dọc cho đủ chữ, nút phụ gọn hơn. */
+.sideRight .actions { flex-direction: column; align-items: stretch; }
+.sideRight .sellBtn { min-height: 40px; font-size: 12px; }
+.shop button {
+  flex: none; min-height: 48px; padding: 0 14px; border-radius: 10px; border: 0;
+  background: #3b82f6; color: #fff; font-weight: 700; font-size: 14px;
+  cursor: pointer; touch-action: manipulation; white-space: nowrap;
+}
+.shop button:active { transform: scale(.97); }
+.shop button:disabled { background: #333; color: #777; cursor: not-allowed; transform: none; }
+/* Nút thanh lý: phụ, viền đỏ mờ, không lấn nút nhập hàng */
+.shop .sellBtn {
+  min-height: 48px; background: transparent; color: #fca5a5;
+  border: 1px solid #7f2d2d; font-size: 13px; font-weight: 600;
+}
+.shop.locked { border-style: dashed; }
+.shop.locked .cnt { background: #333; color: #aaa; }
+.shop.locked .buyBtn:not(:disabled) { background: #2563eb; }
+
+#staffBox { margin: 10px 0; }
+.staffRow {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  background: #1e1e1e; border: 1px solid #3b3350; border-radius: 10px; padding: 12px;
+}
+.staffInfo { min-width: 0; }
+.staffInfo b { font-size: 15px; }
+.staffInfo .arrow { color: #c4b5fd; }
+.staffInfo .sub { font-size: 12px; color: #9ca3af; margin-top: 3px; }
+.upBtn {
+  flex: none; min-height: 48px; padding: 0 14px; border-radius: 10px; border: 0;
+  background: #8b5cf6; color: #fff; font-weight: 700; font-size: 14px;
+  cursor: pointer; touch-action: manipulation; white-space: nowrap;
+}
+.upBtn:active { transform: scale(.97); }
+.upBtn:disabled { background: #333; color: #777; cursor: not-allowed; transform: none; }
+
+.board { background: #1e1e1e; border: 1px solid #333; border-radius: 10px; padding: 12px; margin: 16px 0 10px; }
+.board h2 { margin: 0 0 8px; font-size: 16px; }
+.meRow { font-size: 14px; color: #9ca3af; margin-bottom: 8px; }
+.meRow b { color: #fbbf24; }
+#boardList { list-style: none; padding: 0; margin: 0; }
+#boardList li { display: flex; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid #2a2a2a; font-size: 14px; }
+#boardList li:last-child { border-bottom: 0; }
+#boardList .r { opacity: .6; width: 36px; flex: none; }
+#boardList .n { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#boardList b { color: #fbbf24; flex: none; }
+#boardList .empty { opacity: .6; display: block; }
+#boardList li.me { background: #3a2f10; border: 1px solid #a16207; border-radius: 8px; }
+#rankMsg { font-size: 13px; opacity: .7; margin-top: 6px; }
+
+.sys { margin-top: 16px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 14px; }
+.sys button {
+  padding: 8px 12px; min-height: 44px; border-radius: 8px; border: 1px solid #444;
+  background: #222; color: #eee; cursor: pointer;
+}
+#offlineMsg { flex-basis: 100%; color: #86efac; font-size: 13px; min-height: 18px; }
+
+/* ---------- Modal xác nhận ---------- */
+#modal {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px; background: rgba(0, 0, 0, .65);
+}
+#modal[hidden] { display: none; }
+.modalCard {
+  width: 100%; max-width: 380px;
+  background: #1e1e1e; border: 1px solid #3a3a3a; border-radius: 16px;
+  padding: 18px; box-shadow: 0 18px 50px rgba(0, 0, 0, .55);
+  animation: modalPop .14s ease-out;
+}
+@keyframes modalPop {
+  from { transform: scale(.96); opacity: .5; }
+  to { transform: scale(1); opacity: 1; }
+}
+.modalCard h2 { margin: 0 0 12px; font-size: 19px; }
+.mRow {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 9px 0; border-bottom: 1px solid #2c2c2c; font-size: 14px;
+}
+.mRow:last-child { border-bottom: 0; }
+.mRow span { color: #9ca3af; }
+.mRow b { color: #fbbf24; text-align: right; }
+.modalActions { display: flex; gap: 10px; margin-top: 16px; }
+.modalActions button {
+  flex: 1; min-height: 52px; border-radius: 12px; border: 0;
+  font-size: 16px; font-weight: 700; cursor: pointer; touch-action: manipulation;
+}
+.modalActions button:active { transform: scale(.98); }
+.btnGhost { background: #2a2a2a; color: #e5e5e5; border: 1px solid #444 !important; }
+.btnPrimary { background: #22c55e; color: #06280f; }
+
+/* ---------- Đăng nhập (bắt buộc) ---------- */
+body.authLocked { overflow: hidden; }
+
+#authOverlay {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex;
+  padding: 18px;
+  padding-top: max(18px, env(safe-area-inset-top));
+  padding-bottom: max(18px, env(safe-area-inset-bottom));
+  overflow-y: auto;
+  background:
+    radial-gradient(circle at 50% 0%, #1f3a2a 0%, #151515 48%, #0d0d0d 100%);
+  -webkit-overflow-scrolling: touch;
+}
+#authOverlay[hidden] { display: none; }
+
+.authCard {
+  width: 100%; max-width: 400px; margin: auto;
+  background: #1b1b1b; border: 1px solid #343434; border-radius: 18px;
+  padding: 22px 20px 20px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .65);
+  text-align: left;
+}
+.authLogo { font-size: 42px; line-height: 1; text-align: center; }
+.authCard h2 {
+  margin: 8px 0 6px; font-size: 22px; line-height: 1.2; text-align: center;
+}
+.authSub {
+  margin: 0 0 8px; font-size: 13px; line-height: 1.45;
+  color: #9ca3af; text-align: center;
+}
+.authLabel {
+  display: block; margin: 14px 0 6px;
+  font-size: 13px; font-weight: 600; color: #c7c7c7;
+}
+.authCard input {
+  width: 100%; min-height: 52px; padding: 0 14px;
+  border-radius: 12px; border: 1px solid #444;
+  background: #111; color: #eee; font-size: 16px; /* >=16px để iOS không zoom */
+}
+.authCard input:focus {
+  outline: none; border-color: #4ade80; box-shadow: 0 0 0 2px rgba(74, 222, 128, .18);
+}
+.authBtn {
+  width: 100%; min-height: 52px; margin-top: 10px;
+  border: 0; border-radius: 12px;
+  background: #3b82f6; color: #fff;
+  font-size: 16px; font-weight: 700;
+  cursor: pointer; touch-action: manipulation;
+}
+.authBtn:active { transform: scale(.98); }
+.authBtn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.authBtnPrimary { background: #22c55e; color: #06280f; }
+.authBtnGoogle {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  margin-top: 0; background: #fff; color: #1f2937;
+}
+.gIcon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 1px solid #dadce0;
+  font-size: 16px; font-weight: 800; color: #4285f4;
+  font-family: Arial, sans-serif;
+}
+.authOr {
+  display: flex; align-items: center; gap: 10px;
+  margin: 16px 0 12px; color: #6b7280; font-size: 12px;
+}
+.authOr::before, .authOr::after {
+  content: ""; flex: 1; height: 1px; background: #333;
+}
+#authErr {
+  min-height: 20px; margin-top: 12px;
+  font-size: 13px; line-height: 1.4; color: #fca5a5;
+}
+#authErr.ok { color: #86efac; }

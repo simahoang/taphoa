@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Game3 - Tiệm Tạp Hóa Idle (MVP)</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏪</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- Bắt buộc đăng nhập mới chơi (phương án B) -->
+<div id="authOverlay" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+  <div class="authCard">
+    <div class="authLogo" aria-hidden="true">🏪</div>
+    <h2 id="authTitle">Tiệm Tạp Hóa Idle</h2>
+    <p class="authSub">Đăng nhập để chơi và lưu điểm lên bảng xếp hạng online.</p>
+
+    <label class="authLabel" for="authEmail">Email</label>
+    <input id="authEmail" type="email" inputmode="email" autocomplete="email"
+           placeholder="ban@email.com" spellcheck="false">
+    <button id="sendOtpBtn" type="button" class="authBtn">Gửi mã</button>
+
+    <label class="authLabel" for="authOtp">Mã OTP trong email</label>
+    <input id="authOtp" type="text" inputmode="numeric" autocomplete="one-time-code"
+           maxlength="10" placeholder="123456" spellcheck="false">
+    <button id="verifyOtpBtn" type="button" class="authBtn authBtnPrimary">Xác nhận</button>
+
+    <div class="authOr"><span>hoặc</span></div>
+    <button id="googleBtn" type="button" class="authBtn authBtnGoogle">
+      <span class="gIcon" aria-hidden="true">G</span> Đăng nhập bằng Google
+    </button>
+
+    <div id="authErr" role="alert"></div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="layout">
+    <aside class="side sideLeft" aria-label="Bảng xếp hạng">
+      <section class="board">
+        <h2>🏆 BXH chủ tiệm</h2>
+        <div class="meRow">Bạn đang chơi: <b id="myName"></b></div>
+        <ol id="boardList"></ol>
+        <div id="rankMsg"></div>
+      </section>
+    </aside>
+    <div class="center">
+      <header>
+        <h1>Tiệm Tạp Hóa Idle <span id="envBadge" hidden></span></h1>
+        <div class="money">💰 <span id="money">0</span> đ</div>
+        <div class="income" title="Tổng lãi nếu mỗi quầy đang có hàng bán 1 đơn vị (chưa tính thời gian đi lại)">Lãi tối đa/lượt: <span id="ips">0</span> đ</div>
+        <button id="muteBtn" type="button" aria-label="Bật/tắt âm thanh" title="Bật/tắt âm thanh">🔊</button>
+        <div id="userBar" hidden>
+          <span id="userEmail"></span>
+          <button id="logoutBtn" type="button">Đăng xuất</button>
+        </div>
+      </header>
+      <main>
+        <canvas id="scene" width="480" height="360"></canvas>
+        <section class="sys">
+          <button id="saveBtn">Lưu</button>
+          <button id="resetBtn">Chơi lại</button>
+          <div id="offlineMsg"></div>
+        </section>
+      </main>
+    </div>
+    <aside class="side sideRight" aria-label="Menu mua hàng">
+      <h2 class="secTitle">🛒 Mua hàng</h2>
+      <section id="shops" aria-label="Danh sách quầy hàng"></section>
+      <h2 class="secTitle">Nhân viên</h2>
+      <section id="staffBox" aria-label="Nhân viên"></section>
+    </aside>
+  </div>
+</div>
+
+<!-- Modal xác nhận mua / nâng cấp -->
+<div id="modal" hidden>
+  <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h2 id="modalTitle"></h2>
+    <div id="modalBody"></div>
+    <div class="modalActions">
+      <button id="modalCancel" type="button" class="btnGhost">Hủy</button>
+      <button id="modalConfirm" type="button" class="btnPrimary">Xác nhận</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
