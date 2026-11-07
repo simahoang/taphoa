@@ -31,19 +31,25 @@
     <label class="authLabel" for="authEmail">Email</label>
     <input id="authEmail" type="email" inputmode="email" autocomplete="email"
            placeholder="ban@email.com" spellcheck="false">
-    <button id="sendOtpBtn" type="button" class="authBtn">Gửi mã</button>
+    <button id="sendOtpBtn" type="button" class="authBtn">Gửi link đăng nhập</button>
 
-    <label class="authLabel" for="authOtp">Mã OTP trong email</label>
+    <div class="authSteps" id="linkSteps" hidden>
+      <p><b>Bước 1:</b> mở email <b id="sentTo"></b> (kiểm tra cả Spam/Quảng cáo).</p>
+      <p><b>Bước 2:</b> bấm nút <b>Sign in</b> trong email — game tự mở và đăng nhập.</p>
+      <p class="authNote">Mở email trên <b>cùng thiết bị</b> đang chơi. Link dùng 1 lần, hết hạn sau 1 giờ.</p>
+      <button id="alreadyClickedBtn" type="button" class="authBtn">Tôi đã bấm link — vào game</button>
+    </div>
+
+    <label class="authLabel" for="authOtp">Có mã số trong email? (không bắt buộc)</label>
     <input id="authOtp" type="text" inputmode="numeric" autocomplete="one-time-code"
-           maxlength="10" placeholder="123456" spellcheck="false">
-    <button id="verifyOtpBtn" type="button" class="authBtn authBtnPrimary">Xác nhận</button>
+           maxlength="10" placeholder="Nhập mã 6 số nếu có" spellcheck="false">
+    <button id="verifyOtpBtn" type="button" class="authBtn">Xác nhận mã</button>
 
     <div class="authOr"><span>hoặc</span></div>
+    <div id="authErr" role="alert"></div>
     <button id="googleBtn" type="button" class="authBtn authBtnGoogle">
       <span class="gIcon" aria-hidden="true">G</span> Đăng nhập bằng Google
     </button>
-
-    <div id="authErr" role="alert"></div>
   </div>
 </div>
 

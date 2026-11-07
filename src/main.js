@@ -405,23 +405,28 @@ $("sendOtpBtn").addEventListener("click", async () => {
   if (!validEmail(email)) { authMsg("Email chưa hợp lệ."); $("authEmail").focus(); return; }
   const btn = $("sendOtpBtn");
   btn.disabled = true;
-  authMsg("Đang gửi mã...", true);
+  authMsg("Đang gửi link...", true);
   try {
     await sendOtp(email);
-    authMsg("Đã gửi mã. Kiểm tra email (cả mục Spam) rồi nhập mã bên dưới.", true);
-    $("authOtp").focus();
+    // Hiện hướng dẫn bấm link: đa số user không biết phải mở email.
+    $("sentTo").textContent = email;
+    $("linkSteps").hidden = false;
+    authMsg("");
   } catch (e) {
-    authMsg((e && e.message) || "Gửi mã thất bại.");
+    authMsg((e && e.message) || "Gửi link thất bại.");
   } finally {
     btn.disabled = false;
   }
 });
 
+// User đã bấm link ở tab/thiết bị khác cùng trình duyệt -> session đã vào localStorage, reload để nhận.
+$("alreadyClickedBtn").addEventListener("click", () => location.reload());
+
 $("verifyOtpBtn").addEventListener("click", async () => {
   const email = $("authEmail").value.trim();
   const code = $("authOtp").value.trim();
   if (!validEmail(email)) { authMsg("Email chưa hợp lệ."); $("authEmail").focus(); return; }
-  if (!code) { authMsg("Nhập mã OTP trong email."); $("authOtp").focus(); return; }
+  if (!code) { authMsg("Nhập mã số trong email (nếu email của bạn có mã)."); $("authOtp").focus(); return; }
   const btn = $("verifyOtpBtn");
   btn.disabled = true;
   authMsg("Đang xác nhận...", true);

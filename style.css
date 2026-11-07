@@ -254,6 +254,14 @@ body.authLocked { overflow: hidden; }
 .authOr::before, .authOr::after {
   content: ""; flex: 1; height: 1px; background: #333;
 }
+.authSteps {
+  background: #172554; border: 1px solid #1d4ed8; border-radius: 10px;
+  padding: 12px; margin-top: 12px; font-size: 14px; line-height: 1.6;
+}
+.authSteps p { margin: 0 0 6px; }
+.authSteps b { color: #bfdbfe; }
+.authSteps .authNote { color: #9ca3af; font-size: 13px; }
+.authSteps .authBtn { margin-top: 8px; }
 #authErr {
   min-height: 20px; margin-top: 12px;
   font-size: 13px; line-height: 1.4; color: #fca5a5;

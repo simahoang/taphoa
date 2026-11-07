@@ -115,7 +115,7 @@ function authReq(path, opt = {}) {
   });
 }
 
-// ---------- OTP email ----------
+// ---------- OTP / magic link qua email (không cần SMTP riêng) ----------
 
 export async function sendOtp(email) {
   const clean = normalizeEmail(email);
@@ -130,7 +130,7 @@ export async function verifyOtp(email, code) {
   const clean = normalizeEmail(email);
   const token = String(code || "").trim();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean)) throw new Error("Email chưa hợp lệ.");
-  if (!token) throw new Error("Nhập mã OTP trong email.");
+  if (!token) throw new Error("Nhập mã trong email (nếu email có mã số).");
   const data = await authReq("/verify", {
     method: "POST",
     body: JSON.stringify({ email: clean, token, type: "email" }),
