@@ -9,6 +9,9 @@ body {
   justify-content: center;
   -webkit-tap-highlight-color: transparent;
 }
+.contact { text-align: center; font-size: 13px; color: #9ca3af; padding: 16px 0 8px; }
+.contact a { color: #93c5fd; }
+
 body.modalOpen { overflow: hidden; }
 
 #app { width: 100%; max-width: 520px; padding: 16px; padding-bottom: 32px; }
