@@ -8,6 +8,7 @@ import {
 import { initScene } from "./scene.js";
 import { playClick, playSale, isMuted, toggleMuted } from "./audio.js";
 import { getName, getLocalRank, getTop, submitScore, refreshOnlineTop, initNameFromEmail } from "./leaderboard.js";
+import { shareScore } from "./share.js";
 import { APP_ENV, SCORE_TABLE } from "./supabase.js";
 import {
   handleAuthCallback, getSession, isLoggedIn, refreshSession,
@@ -339,6 +340,18 @@ function doSave(msg) {
 }
 
 $("saveBtn").onclick = () => doSave("Đã lưu");
+$("shareBtn").onclick = async () => {
+  const btn = $("shareBtn");
+  btn.disabled = true;
+  try {
+    const how = await shareScore(Math.floor(netWorth(state)));
+    toast(how === "shared" ? "Đã mở chia sẻ" : "Đã tải ảnh điểm, gửi cho bạn bè đi!");
+  } catch (e) {
+    toast(String((e && e.message) || e));
+  } finally {
+    btn.disabled = false;
+  }
+};
 $("resetBtn").onclick = () => {
   if (!confirm("Chơi lại?")) return;
   if (Math.floor(netWorth(state)) > 0) submitScore(Math.floor(netWorth(state))).then(renderBoard);

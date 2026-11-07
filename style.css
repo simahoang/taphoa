@@ -126,6 +126,12 @@ header h1 { margin: 0; font-size: 24px; line-height: 1.25; padding: 0 48px; }
 .board h2 { margin: 0 0 8px; font-size: 16px; }
 .meRow { font-size: 14px; color: #9ca3af; margin-bottom: 8px; }
 .meRow b { color: #fbbf24; }
+.shareBtn {
+  width: 100%; margin-top: 10px; min-height: 48px; border-radius: 10px; border: 1px solid #a16207;
+  background: #3a2f10; color: #fbbf24; font-weight: 700; font-size: 15px; cursor: pointer;
+  touch-action: manipulation;
+}
+.shareBtn:disabled { opacity: .5; cursor: default; }
 #boardList { list-style: none; padding: 0; margin: 0; }
 #boardList li { display: flex; gap: 8px; align-items: center; padding: 6px 0; border-bottom: 1px solid #2a2a2a; font-size: 14px; }
 #boardList li:last-child { border-bottom: 0; }
